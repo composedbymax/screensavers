@@ -452,6 +452,57 @@
                         gl_FragColor = vec4(color, 1.0);
                     }
                 `
+            },
+            {
+                name: "Particle Grid Dimension",
+                shader: `
+                    precision highp float;
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    uniform vec3 uColor;
+                    float particle(vec2 p, vec2 center, float size) {
+                        float d = length(p - center);
+                        return size / (d * d);
+                    }
+                    vec2 rotate(vec2 p, float angle) {
+                        float s = sin(angle);
+                        float c = cos(angle);
+                        return vec2(p.x * c - p.y * s, p.x * s + p.y * c);
+                    }
+                    void main() {
+                        vec2 uv = (gl_FragCoord.xy * 2.0 - uResolution.xy) / min(uResolution.x, uResolution.y);
+                        vec3 finalColor = vec3(0.0);
+                        float t = uTime * 0.3;
+                        for(float i = 0.0; i < 6.0; i++) {
+                            float depth = pow(2.0, i);
+                            for(float row = -4.0; row <= 4.0; row++) {
+                                vec2 rowOffset = vec2(
+                                    sin(t * (0.5 + row * 0.1)) * 0.3,
+                                    row * 0.2 + cos(t * (0.3 + row * 0.1)) * 0.1
+                                );
+                                for(float col = -4.0; col <= 4.0; col++) {
+                                    vec2 colOffset = vec2(
+                                        col * 0.2 + sin(t * (0.4 + col * 0.1)) * 0.1,
+                                        cos(t * (0.6 + col * 0.1)) * 0.1
+                                    );
+                                    vec2 offset = rowOffset + colOffset;
+                                    vec2 p = rotate(uv * depth + offset, t * (0.2 + i * 0.1));
+                                    float brightness = particle(p, vec2(0.0), 0.001);
+                                    vec3 color = vec3(
+                                        0.6 + 0.4 * sin(i * 0.8 + row * 0.2 + t),
+                                        0.6 + 0.4 * sin(i * 0.8 + col * 0.2 + t + 2.094),
+                                        0.6 + 0.4 * sin(i * 0.8 + (row + col) * 0.1 + t + 4.188)
+                                    );
+                                    finalColor += color * brightness / depth;
+                                }
+                            }
+                        }
+                        finalColor *= 1.5;
+                        finalColor = pow(finalColor, vec3(0.7));
+                        finalColor *= uColor;
+                        gl_FragColor = vec4(finalColor, 1.0);
+                    }
+                `
             }
         ];
         let currentScreensaver = 0;
