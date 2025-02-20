@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #000;
+}
+canvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+}
+.controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-family: Arial, sans-serif;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.fullscreen-btn {
+    background: #444;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.fullscreen-btn:hover {
+    background: #666;
+}
+.color-picker {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+.color-picker::-webkit-color-swatch {
+    border: none;
+    border-radius: 3px;
+}
+.color-picker::-moz-color-swatch {
+    border: none;
+    border-radius: 3px;
+}
